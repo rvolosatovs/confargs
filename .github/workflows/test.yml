@@ -1,0 +1,44 @@
+name: Test
+on: [ push, pull_request ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        target: 
+        - x86_64-unknown-linux-musl
+        - x86_64-unknown-linux-gnu
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.4.0
+    - uses: cachix/install-nix-action@v17
+    - uses: cachix/cachix-action@v10
+      with:
+        name: rvolosatovs
+        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    - run: nix develop -c cargo test --target '${{ matrix.target }}' --workspace --all-features
+
+  check:
+    strategy:
+      matrix:
+        target: 
+        - x86_64-unknown-linux-musl
+        - x86_64-unknown-linux-gnu
+        - wasm32-wasi
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.4.0
+    - uses: cachix/install-nix-action@v17
+    - uses: cachix/cachix-action@v10
+      with:
+        name: rvolosatovs
+        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    - run: nix develop -c cargo check --target '${{ matrix.target }}' --workspace --all-features
+    - run: nix develop -c cargo check --target '${{ matrix.target }}' --workspace --no-default-features

@@ -1,0 +1,15 @@
+[package]
+name = "confargs"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "Parse configuration files into a set arguments"
+authors = ["Roman Volosatovs"]
+
+[dependencies]
+anyhow = { version = "1.0.57", default-features = false, features = ["std"] }
+toml = { version = "0.5.9", default-features = false }
+
+[dev-dependencies]
+clap = { version = "3.2.3", default-features = false, features = ["derive", "std"] }
+tempfile = { version = "3.3.0", default-features = false }
