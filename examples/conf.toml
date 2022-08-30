@@ -1,0 +1,4 @@
+string = "conf"
+integer = -42
+float = -42.2
+array = [ "test", "config" ]

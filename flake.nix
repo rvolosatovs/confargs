@@ -21,10 +21,10 @@
 
         rust = with pkgs.fenix;
           combine [
-            stable.toolchain
-            targets.wasm32-wasi.stable.rust-std
-            targets.x86_64-unknown-linux-gnu.stable.rust-std
-            targets.x86_64-unknown-linux-musl.stable.rust-std
+            latest.toolchain
+            targets.wasm32-wasi.latest.rust-std
+            targets.x86_64-unknown-linux-gnu.latest.rust-std
+            targets.x86_64-unknown-linux-musl.latest.rust-std
           ];
       in rec {
         formatter = pkgs.alejandra;
@@ -32,8 +32,6 @@
         devShells.default = pkgs.mkShell {
           buildInputs = [
             rust
-
-            pkgs.zlib
           ];
         };
       }
