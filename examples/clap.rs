@@ -17,8 +17,7 @@ struct Args {
 fn main() -> anyhow::Result<()> {
     let args = confargs::args::<Toml>(prefix_char_filter::<'@'>)
         .context("failed to parse config")
-        .map(Args::try_parse_from)?
-        .context("failed to parse arguments")?;
+        .map(Args::parse_from)?;
     println!("{:?}", args);
     Ok(())
 }
