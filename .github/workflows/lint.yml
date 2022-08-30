@@ -19,9 +19,9 @@ jobs:
         name: rvolosatovs
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - name: cargo fmt
-      run: nix develop -c cargo fmt --check
+      run: nix develop --ignore-environment -c cargo fmt --check
     - name: cargo clippy
-      run: nix develop -c cargo clippy --workspace --all-features
+      run: nix develop --ignore-environment -c cargo clippy --workspace --all-features
 
   flake:
     runs-on: ubuntu-latest
