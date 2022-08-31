@@ -50,15 +50,15 @@ fn parse_bool_arg(k: impl Display, v: bool) -> Option<String> {
 
 /// Configuration file format
 pub trait Format {
-    /// Argument [IntoIterator] type returned by the format.
+    /// Argument [`IntoIterator`] type returned by the format.
     type IntoIter: IntoIterator<Item = String>;
 
-    /// Reads configuration at `path` and returns an [IntoIter](Self::IntoIter) of arguments
+    /// Reads configuration at `path` and returns an [`IntoIter`](Self::IntoIter) of arguments
     fn read(path: impl AsRef<Path>) -> io::Result<Self::IntoIter> {
         read(path).and_then(|buf| Self::from_slice(buf.as_slice()))
     }
 
-    /// Parses configuration in `buf` and returns an [IntoIter](Self::IntoIter) of arguments
+    /// Parses configuration in `buf` and returns an [`IntoIter`](Self::IntoIter) of arguments
     fn from_slice(buf: impl AsRef<[u8]>) -> io::Result<Self::IntoIter>;
 }
 
@@ -89,7 +89,8 @@ pub fn prefix_char_filter<const C: char>(arg: &str) -> Option<&Path> {
     arg.strip_prefix(C).map(Path::new)
 }
 
-/// Parses all configuration files paths returned by [Filter] using [Format] into an [IntoIterator] of arguments.
+/// Parses all configuration files paths returned by [`Filter`] from [`std::env::args`]
+/// using [`Format`] into an [`IntoIterator`] of arguments.
 ///
 /// # Examples
 /// ```
