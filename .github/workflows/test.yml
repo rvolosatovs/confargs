@@ -23,7 +23,7 @@ jobs:
       with:
         name: rvolosatovs
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - run: nix develop --ignore-environment -c cargo test --target '${{ matrix.target }}' --workspace --all-features
+    - run: nix develop -i -c sh --noprofile -c cargo test --target '${{ matrix.target }}' --workspace --all-features
 
   check:
     strategy:
@@ -40,5 +40,5 @@ jobs:
       with:
         name: rvolosatovs
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - run: nix develop --ignore-environment -c cargo check --target '${{ matrix.target }}' --workspace --all-features
-    - run: nix develop --ignore-environment -c cargo check --target '${{ matrix.target }}' --workspace --no-default-features
+    - run: nix develop -i -c sh --noprofile -c cargo check --target '${{ matrix.target }}' --workspace --all-features
+    - run: nix develop -i -c sh --noprofile -c cargo check --target '${{ matrix.target }}' --workspace --no-default-features
