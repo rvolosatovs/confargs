@@ -5,6 +5,9 @@ edition = "2021"
 license = "Apache-2.0"
 description = "Parse configuration files into a set arguments"
 authors = ["Roman Volosatovs"]
+repository = "https://github.com/rvolosatovs/confargs"
+categories = ["command-line-interface", "config", "parsing"]
+keywords = ["cli", "config", "configuration", "arg", "argument"]
 
 [dependencies]
 anyhow = { version = "1.0.57", default-features = false, features = ["std"] }
