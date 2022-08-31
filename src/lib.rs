@@ -1,4 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
+//
+//! Parse a configuration file in arbitrary format into a iterator of command-line arguments.
+//!
+//! The main use case for this crate is to add configuration file support for CLI tools and argument parsers, which do not have support for configuration files (for example, [clap](https://github.com/clap-rs/clap))
 
 #![forbid(unsafe_code)]
 #![deny(
@@ -7,6 +11,7 @@
     deprecated_in_future,
     missing_copy_implementations,
     missing_debug_implementations,
+    missing_docs,
     noop_method_call,
     rust_2018_compatibility,
     rust_2018_idioms,
@@ -45,23 +50,54 @@ fn parse_bool_arg(k: impl Display, v: bool) -> Option<String> {
 
 /// Configuration file format
 pub trait Format {
+    /// Argument [IntoIterator] type returned by the format.
     type IntoIter: IntoIterator<Item = String>;
 
-    /// reads configuration at `path` and returns an [IntoIter](Self::IntoIter) of arguments
+    /// Reads configuration at `path` and returns an [IntoIter](Self::IntoIter) of arguments
     fn read(path: impl AsRef<Path>) -> io::Result<Self::IntoIter> {
         read(path).and_then(|buf| Self::from_slice(buf.as_slice()))
     }
 
-    /// parses configuration in `buf` and returns an [IntoIter](Self::IntoIter) of arguments
+    /// Parses configuration in `buf` and returns an [IntoIter](Self::IntoIter) of arguments
     fn from_slice(buf: impl AsRef<[u8]>) -> io::Result<Self::IntoIter>;
 }
 
+/// Argument filter, which, given a command-line argument, either returns `Some(path)`, if the
+/// argument is a path to configuration file or returns `None` otherwise.
+///
+/// # Examples
+///
+/// ```
+/// # use confargs::Filter;
+/// use std::path::Path;
+///
+/// let _: Filter = |arg| arg.strip_prefix("--config=").map(Path::new);
+/// ```
 pub type Filter = fn(&str) -> Option<&Path>;
 
+/// Argument filter, which filters arguments by a character prefix.
+///
+/// # Examples
+///
+/// ```
+/// # use confargs::prefix_char_filter;
+/// use confargs::Filter;
+///
+/// let _: Filter = prefix_char_filter::<'@'>;
+/// ```
 pub fn prefix_char_filter<const C: char>(arg: &str) -> Option<&Path> {
     arg.strip_prefix(C).map(Path::new)
 }
 
+/// Parses all configuration files paths returned by [Filter] using [Format] into an [IntoIterator] of arguments.
+///
+/// # Examples
+/// ```
+/// use confargs::{prefix_char_filter, Toml};
+///
+/// let args = confargs::args::<Toml>(prefix_char_filter::<'@'>)
+///     .expect("failed to parse configuration files");
+/// ```
 pub fn args<T: Format>(f: Filter) -> io::Result<impl IntoIterator<Item = String>> {
     let mut args = env::args();
     args.try_fold(Vec::with_capacity(args.len()), |mut args, arg| {
@@ -101,12 +137,6 @@ true = true
 false = false
 datetime = 01:02:03.000000004
 array = [1, 2, 3]"#;
-
-    #[test]
-    fn filters() {
-        let _: Filter = prefix_char_filter::<'@'>;
-        let _: Filter = |arg| arg.strip_prefix("--config").map(Path::new);
-    }
 
     #[test]
     fn args() {

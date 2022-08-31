@@ -20,6 +20,7 @@ jobs:
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - run: nix develop -i -c sh --noprofile -c cargo fmt --check
     - run: nix develop -i -c sh --noprofile -c cargo clippy --workspace --all-features
+    - run: nix develop -i -c sh --noprofile -c cargo doc
 
   flake:
     runs-on: ubuntu-latest
