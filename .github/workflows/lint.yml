@@ -22,7 +22,7 @@ jobs:
     - run: nix develop -i -c sh --noprofile -c cargo clippy --workspace --all-features
     - run: nix develop -i -c sh --noprofile -c cargo doc
 
-  flake:
+  nix:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.4.0
