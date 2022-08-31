@@ -77,7 +77,7 @@ fn parse_arg<'a>(
 /// This format expects the configuration to be represented as a table. Nested tables are not
 /// supported.
 ///
-/// # Example
+/// # Examples
 ///
 /// ```
 /// # use std::io::Write;
