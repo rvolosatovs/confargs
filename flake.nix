@@ -21,7 +21,9 @@
 
         rust = with pkgs.fenix;
           combine [
-            latest.toolchain
+            default.clippy
+            default.rustfmt
+            default.toolchain
             targets.wasm32-wasi.latest.rust-std
             targets.x86_64-unknown-linux-gnu.latest.rust-std
             targets.x86_64-unknown-linux-musl.latest.rust-std
