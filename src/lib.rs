@@ -100,7 +100,23 @@ pub fn prefix_char_filter<const C: char>(arg: &str) -> Option<&Path> {
 ///     .expect("failed to parse configuration files");
 /// ```
 pub fn args<T: Format>(f: Filter) -> io::Result<impl IntoIterator<Item = String>> {
-    let mut args = env::args();
+    args_from::<T>(f, env::args())
+}
+
+/// Parses all configuration files paths returned by [`Filter`] from an [`ExactSizeIterator`]
+/// using [`Format`] into an [`IntoIterator`] of arguments.
+///
+/// # Examples
+/// ```
+/// use confargs::{prefix_char_filter, Toml};
+///
+/// let args = confargs::args_from::<Toml>(prefix_char_filter::<'@'>, std::env::args())
+///     .expect("failed to parse configuration files");
+/// ```
+pub fn args_from<T: Format>(
+    f: Filter,
+    mut args: impl ExactSizeIterator<Item = String>,
+) -> io::Result<impl IntoIterator<Item = String>> {
     args.try_fold(Vec::with_capacity(args.len()), |mut args, arg| {
         if let Some(path) = f(&arg) {
             T::read(path)
