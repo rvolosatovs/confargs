@@ -18,10 +18,8 @@ jobs:
       with:
         name: rvolosatovs
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - name: cargo fmt
-      run: nix develop --ignore-environment -c cargo fmt --check
-    - name: cargo clippy
-      run: nix develop --ignore-environment -c cargo clippy --workspace --all-features
+    - run: nix develop -i -c sh --noprofile -c cargo fmt --check
+    - run: nix develop -i -c sh --noprofile -c cargo clippy --workspace --all-features
 
   flake:
     runs-on: ubuntu-latest
@@ -32,7 +30,5 @@ jobs:
       with:
         name: rvolosatovs
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - name: nix flake check
-      run: nix flake check
-    - name: nix fmt
-      run: nix fmt
+    - run: nix flake check
+    - run: nix fmt
