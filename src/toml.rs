@@ -4,8 +4,6 @@ use super::{parse_bool_arg, parse_string_arg, Format};
 
 use std::collections::VecDeque;
 use std::fmt::Display;
-use std::fs::read;
-use std::path::Path;
 use std::{io, vec};
 
 use anyhow::{bail, Result};
@@ -126,10 +124,6 @@ impl Config {
 
 impl Format for Config {
     type IntoIter = Vec<String>;
-
-    fn read(p: impl AsRef<Path>) -> io::Result<Self::IntoIter> {
-        read(p).and_then(|buf| Self::from_slice(buf.as_slice()))
-    }
 
     fn from_slice(buf: impl AsRef<[u8]>) -> io::Result<Self::IntoIter> {
         match toml::from_slice(buf.as_ref()).map_err(|e| {
